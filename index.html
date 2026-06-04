@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,6 @@
             align-items: center;
             flex-direction: column;
             background: black;
-            /* تم رفع القيمة هنا لضمان ظهور الصفحة فوق أي عناصر أخرى عند التشغيل */
             z-index: 99999; 
         }
 
@@ -73,20 +72,25 @@
             z-index: 1;
         }
 
+        /* محاذاة النص إلى اليمين وترتيب موقعه يسار الشاشة */
         .message {
             position: absolute;
-            left: 30px;
-            top: 140px;
-            width: 380px;
-            font-size: 30px;
-            line-height: 1.7;
+            right: auto;
+            left: 5%;
+            top: 8%;
+            width: 45%;
+            font-size: 24px;
+            line-height: 1.8;
             white-space: pre-line;
-            text-align: left;
+            text-align: right;
+            direction: rtl; /* لدعم الكتابة العربية بشكل صحيح */
             z-index: 10;
         }
 
         .cursor {
             animation: blink .8s infinite;
+            display: inline-block;
+            margin-right: 2px;
         }
 
         @keyframes blink {
@@ -101,25 +105,36 @@
             height: 14px;
             background: #ff69b4;
             border-radius: 50%;
-            left: 50%;
+            left: 70%; /* محاذاة البذرة مع جذع الشجرة الجديد */
             top: -20px;
         }
 
+        /* الخط الأرضي الأبيض الممتد بالأسفل */
         .ground {
             position: absolute;
-            bottom: 170px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 420px;
+            bottom: 120px;
+            left: 5%;
+            width: 90%;
             height: 2px;
             background: white;
         }
 
+        /* النص الموجود أسفل الخط تماماً */
+        .footer-text {
+            position: absolute;
+            bottom: 85px;
+            left: 5%;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            color: white;
+            z-index: 10;
+        }
+
+        /* وضع الكانفاس في جهة اليمين ليطابق التصميم */
         .treeCanvas {
             position: absolute;
-            right: 20px;
-            bottom: 60px;
-            /* تم إضافة هذه الخاصية حتى لا يحجب المساحة الشفافة للكانفاس أي نقرات في البداية */
+            right: 5%;
+            bottom: 120px;
             pointer-events: none; 
         }
 
@@ -127,12 +142,12 @@
             position: absolute;
             width: 650px;
             height: 650px;
-            right: 0;
-            bottom: 0;
+            right: 5%;
+            bottom: 60px;
             border-radius: 50%;
             background: radial-gradient(
                 circle,
-                rgba(255, 105, 180, .18),
+                rgba(255, 105, 180, .15),
                 transparent 70%
             );
             pointer-events: none;
@@ -187,16 +202,15 @@
         <div id="message" class="message"></div>
         <div class="seed" id="seed"></div>
         <div class="ground"></div>
+        <div class="footer-text">click me :) to flower the happy birthday</div>
         <div class="glow"></div>
-        <canvas id="treeCanvas" class="treeCanvas" width="700" height="650"></canvas>
+        <canvas id="treeCanvas" class="treeCanvas" width="600" height="550"></canvas>
     </div>
 
     <script>
-        // تعريف عناصر الـ DOM الأساسية أولاً
         const canvas = document.getElementById("treeCanvas");
         const ctx = canvas.getContext("2d");
 
-        // إنشاء النجوم في الخلفية عند تحميل الصفحة مباشرة
         createStars();
 
         function createStars() {
@@ -204,7 +218,7 @@
                 const star = document.createElement("div");
                 star.className = "star";
                 
-                const size = Math.random() * 4 + 1;
+                const size = Math.random() * 3 + 1;
                 star.style.width = size + "px";
                 star.style.height = size + "px";
                 
@@ -217,7 +231,6 @@
             }
         }
 
-        // تشغيل الأنيميشن عند النقر على القلب
         function startAnimation() {
             document.getElementById("page1").style.display = "none";
             document.getElementById("page2").style.display = "block";
@@ -225,10 +238,11 @@
             createPetals();
             
             const seed = document.getElementById("seed");
+            // تحريك البذرة لتسقط على قاعدة الشجرة الجديدة تماماً
             seed.animate(
                 [
                     { top: "-20px" },
-                    { top: "calc(100vh - 177px)" }
+                    { top: "calc(100vh - 127px)" }
                 ],
                 {
                     duration: 1500,
@@ -241,7 +255,6 @@
             }, 1600);
         }
 
-        // إنشاء تساقط أوراق الورد (البتلات)
         function createPetals() {
             setInterval(() => {
                 const petal = document.createElement("div");
@@ -259,7 +272,6 @@
             }, 250);
         }
 
-        // رسم غصون الشجرة
         function branch(x, y, len, angle, width) {
             if (width < 0.5) {
                 drawHeart(x, y);
@@ -278,40 +290,38 @@
             ctx.stroke();
             
             setTimeout(() => {
-                branch(x2, y2, len * 0.8, angle - 0.4, width * 0.7);
-                branch(x2, y2, len * 0.8, angle + 0.4, width * 0.7);
+                branch(x2, y2, len * 0.8, angle - 0.38, width * 0.7);
+                branch(x2, y2, len * 0.8, angle + 0.38, width * 0.7);
             }, 100);
         }
 
-        // رسم القلوب الصغيرة المتفتحة على الشجرة
         function drawHeart(x, y) {
             const colors = ["#ff69b4", "#ff1493", "#ff85c1", "#ffc0cb", "#ffd1dc"];
             
             for (let i = 0; i < 3; i++) {
                 ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-                ctx.font = (12 + Math.random() * 18) + "px Arial";
+                ctx.font = (10 + Math.random() * 14) + "px Arial";
+                // رسم القلوب الشجرية الوردية الصغيرة المماثلة لطلبك
                 ctx.fillText(
-                    "❤️", 
-                    x + (Math.random() * 12 - 6), 
-                    y + (Math.random() * 12 - 6)
+                    "🌸", 
+                    x + (Math.random() * 16 - 8), 
+                    y + (Math.random() * 16 - 8)
                 );
             }
         }
 
-        // بدء رسم الشجرة بالكامل واطلاق دالة الرسالة بعدها
         function drawTree() {
-            // المعاملات: x, y, طول الجذع، الزاوية (للأعلى)، سمك الجذع
-            branch(350, 600, 120, -Math.PI / 2, 14);
+            // رسم الجذع في منتصف مساحة الكانفاس المخصصة له (العرض 600، الارتفاع 550)
+            branch(300, 550, 105, -Math.PI / 2, 11);
             
-            // تظهر الرسالة بعد انتهاء نمو الشجرة تقريباً (8.5 ثوانٍ)
             setTimeout(() => {
                 typeMessage();
             }, 8500);
         }
 
-        // تأثير كتابة نص التهنئة
         function typeMessage() {
-            const text = `To My Birthday Queen 💖\n\nHappy Birthday ✨\n\nToday is all about you.\n\nI hope your heart is filled\nwith happiness,\nyour days with laughter,\nand your future with success.\n\nThank you for every smile,\nevery memory,\nand every beautiful moment.\n\nYou deserve endless love,\nendless joy,\nand endless happiness.\n\nHave the most amazing\nbirthday ever ❤️`;
+            // النص باللغة العربية مطابق تماماً لطلبك في التصميم
+            const text = `إلى ملكة عيد ميلادي 💖\n\nعيد ميلاد سعيد ✨\n\nاليوم كله لكِ.\n\nأتمنى أن يمتلئ قلبكِ\nبالسعـادة،\nوأيامكِ بالضحكِ،\nومستقبلكِ بالنـجاح.\n\nشكراً لكل ابتسامة،\nولكل ذكرى،\nولكل لحظة جميلة.\n\nتستحقين حباً لا ينتهي،\nوفرحة لا تنتهي،\nوسعادة لا تنتهي.\n\nأتمنى لكِ أجمل\nعيد ميلاد على الإطلاق ❤️`;
             
             let i = 0;
             const box = document.getElementById("message");
@@ -320,7 +330,7 @@
                 if (i < text.length) {
                     box.innerHTML = text.substring(0, i + 1) + "<span class='cursor'>|</span>";
                     i++;
-                    setTimeout(write, 45);
+                    setTimeout(write, 55); // سرعة متناسقة ومناسبة للقراءة العربية
                 } else {
                     box.innerHTML = text;
                 }
