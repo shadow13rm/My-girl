@@ -23,19 +23,22 @@ color:white;
 /* الصفحة الأولى */
 
 #page1{
-position:absolute;
-width:100%;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-background:black;
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    background:black;
+    z-index:9999;
 }
 
 .click-area{
-cursor:pointer;
-text-align:center;
+    cursor:pointer;
+    text-align:center;
+    position:relative;
+    z-index:10000;
 }
 
 .big-heart{
@@ -140,6 +143,10 @@ background:white;
 border-radius:50%;
 animation:twinkle 2s infinite alternate;
 }
+.petal{
+    pointer-events:none;
+}
+
 
 @keyframes twinkle{
 from{
