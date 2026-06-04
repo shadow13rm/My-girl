@@ -32,7 +32,6 @@
             z-index: 99999; 
         }
 
-        /* تصميم منطقة الضغط لمطابقة شكل تريند الفيديو الأصلي */
         .click-area {
             cursor: pointer;
             position: relative;
@@ -82,12 +81,12 @@
             z-index: 1;
         }
 
-        /* تنسيق النص الأيسر تماماً مثل لقطة الشاشة المرفقة */
+        /* تنسيق النص الأيسر مع إعطائه مساحة أكبر تصل إلى 45% من الشاشة لراحة كاملة */
         .message {
             position: absolute;
             left: 8%;
             top: 25%;
-            width: 35%;
+            width: 45%;
             font-size: 20px;
             line-height: 1.8;
             white-space: pre-line;
@@ -104,14 +103,14 @@
             50% { opacity: 0; }
         }
 
-        /* البذرة (النقطة التي تسقط من الأعلى) */
+        /* تم تعديل موضع البذرة لتسقط في جهة اليمين عند 80% */
         .seed {
             position: absolute;
             width: 12px;
             height: 12px;
             background: #ff7da7;
             border-radius: 50%;
-            left: 65%; /* متموضعة فوق نقطة بداية جذع الشجرة */
+            left: 80%; 
             top: -20px;
         }
 
@@ -125,7 +124,6 @@
             background: white;
         }
 
-        /* وضع الكانفاس ليكون جذع الشجرة فوق الخط وبمكان سقوط النقطة تماماً */
         .treeCanvas {
             position: absolute;
             left: 0;
@@ -174,7 +172,6 @@
         const canvas = document.getElementById("treeCanvas");
         const ctx = canvas.getContext("2d");
 
-        // ضبط أبعاد الكانفاس لتطابق أبعاد الشاشة الحقيقية بدقة
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -182,7 +179,6 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // إنشاء النجوم في الخلفية
         createStars();
 
         function createStars() {
@@ -204,9 +200,9 @@
             document.getElementById("page2").style.display = "block";
             
             const seed = document.getElementById("seed");
-            const groundY = window.innerHeight - 120; // موقع الخط الأرضي
+            const groundY = window.innerHeight - 120;
             
-            // سقوط النقطة من الأعلى حتى ترتطم بالخط الأبيض تماماً
+            // البذرة تسقط عند محاذاة الـ 80% جهة اليمين
             seed.animate(
                 [
                     { top: "-20px" },
@@ -219,14 +215,13 @@
                 }
             );
             
-            // عند لحظة الارتطام، تختفي النقطة وتبدأ الشجرة بالخروج من مكان السقوط
             setTimeout(() => {
                 seed.style.display = "none";
-                drawTree(window.innerWidth * 0.65, groundY);
+                // جعل الشجرة تنبت بدقة من موقع الـ 80% لتطابق مكان سقوط البذرة
+                drawTree(window.innerWidth * 0.80, groundY);
             }, 1200);
         }
 
-        // دالة مخصصة لرسم الأغصان لتجبر الشجرة على أخذ كيرف ومنحنى شكل القلب التلقائي
         function branch(x, y, len, angle, width, generation) {
             if (generation > 11) {
                 drawHeartLeaves(x, y);
@@ -234,7 +229,6 @@
             }
             
             ctx.beginPath();
-            // تدرج لوني دافئ يبدأ بلون الجذع الوردي السميك المماثل للصورة ويتغير تدريجياً للأغصان
             ctx.strokeStyle = generation < 3 ? "#ffaec9" : "#ff7da7";
             ctx.lineWidth = width;
             ctx.lineCap = "round";
@@ -246,7 +240,6 @@
             ctx.lineTo(x2, y2);
             ctx.stroke();
             
-            // معادلة ذكية لتغيير زوايا الأغصان تدريجياً لتقوس الهيكل الخارجي للشجرة لتصبح مثل القلب تماماً
             let angleOffset1 = 0.35;
             let angleOffset2 = 0.35;
             
@@ -256,21 +249,17 @@
             }
 
             setTimeout(() => {
-                // تفرع فرعي ثنائي متناسق لبناء هيكل القلب المتفرع
                 branch(x2, y2, len * 0.82, angle - angleOffset1, width * 0.72, generation + 1);
                 branch(x2, y2, len * 0.82, angle + angleOffset2, width * 0.72, generation + 1);
             }, 90);
         }
 
-        // رسم أوراق القلوب المتكدسة لتعبئة الشجرة وجعلها تبدو ممتلئة تماماً باللون الفوشي والوردي والأصفر
         function drawHeartLeaves(x, y) {
-            // الألوان المأخوذة من الصورة المرفقة بالترتيب (فوشي، وردي، برتقالي خفيف، أصفر، بنفسجي)
             const colors = ["#ff1493", "#ff69b4", "#ffa500", "#fffa65", "#ff66b2", "#ffb6c1"];
             
             for (let i = 0; i < 4; i++) {
                 ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
                 ctx.font = (12 + Math.random() * 16) + "px Arial";
-                // نستخدم رمز القلب المكتنز لتظهر الشجرة كثيفة وجميلة
                 ctx.fillText(
                     "♥", 
                     x + (Math.random() * 36 - 18), 
@@ -279,18 +268,14 @@
             }
         }
 
-        // بدء إنبات الشجرة من نقطة الارتطام
         function drawTree(startX, startY) {
-            // الجذع الرئيسي يبدأ غليظاً (سمك 18) ويتجه للأعلى مباشرة (-Math.PI / 2)
             branch(startX, startY, 95, -Math.PI / 2, 18, 1);
             
-            // تشغيل تأثير الكتابة الإنجليزية بالتزامن مع نمو أوراق الشجرة
             setTimeout(() => {
                 typeMessage();
             }, 3000);
         }
 
-        // نص التهنئة باللغة الإنجليزية وتأثير الـ Typewriter مطابق تماماً للفيديو المرسل
         function typeMessage() {
             const text = `Hey you 💕\nHappy Birthday 🎈\nMay God bless you 🍀\nAnd give u many happiness 💞\nJust saying... you're pretty\nawesome 💖\nSending good vibes and maybe a\nwink 😉`;
             
@@ -303,7 +288,7 @@
                     i++;
                     setTimeout(write, 50); 
                 } else {
-                    box.innerHTML = text; // إبقاء النص كاملاً بدون خط المؤشر عند الانتهاء
+                    box.innerHTML = text;
                 }
             }
             
