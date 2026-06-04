@@ -1,474 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Birthday Queen ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Queen ❤️</title>
 
-<style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
 
-body{
-background:#000;
-overflow:hidden;
-font-family:Arial,sans-serif;
-color:white;
-}
+        /* ----- الصفحة الأولى ----- */
+        #page1 {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: black;
+            /* تم رفع القيمة هنا لضمان ظهور الصفحة فوق أي عناصر أخرى عند التشغيل */
+            z-index: 99999; 
+        }
 
-/* الصفحة الأولى */
+        .click-area {
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+            z-index: 100000;
+        }
 
-#page1{
-    position:absolute;
-    width:100%;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    background:black;
-    z-index:9999;
-}
+        .big-heart {
+            font-size: 95px;
+            animation: pulse 1.5s infinite;
+        }
 
-.click-area{
-    cursor:pointer;
-    text-align:center;
-    position:relative;
-    z-index:10000;
-}
+        @keyframes pulse {
+            50% {
+                transform: scale(1.12);
+            }
+        }
 
-.big-heart{
-font-size:95px;
-animation:pulse 1.5s infinite;
-}
+        .click-text {
+            margin-top: 10px;
+            font-size: 18px;
+        }
 
-@keyframes pulse{
-50%{
-transform:scale(1.12);
-}
-}
+        .click-line {
+            width: 260px;
+            height: 2px;
+            background: white;
+            margin-top: 10px;
+        }
 
-.click-text{
-margin-top:10px;
-font-size:18px;
-}
+        /* ----- الصفحة الثانية ----- */
+        #page2 {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+        }
 
-.click-line{
-width:260px;
-height:2px;
-background:white;
-margin-top:10px;
-}
+        .message {
+            position: absolute;
+            left: 30px;
+            top: 140px;
+            width: 380px;
+            font-size: 30px;
+            line-height: 1.7;
+            white-space: pre-line;
+            text-align: left;
+            z-index: 10;
+        }
 
-/* الصفحة الثانية */
+        .cursor {
+            animation: blink .8s infinite;
+        }
 
-#page2{
-display:none;
-position:absolute;
-width:100%;
-height:100vh;
-overflow:hidden;
-}
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
 
-.message{
-position:absolute;
-left:30px;
-top:140px;
-width:380px;
-font-size:30px;
-line-height:1.7;
-white-space:pre-line;
-text-align:left;
-}
+        .seed {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ff69b4;
+            border-radius: 50%;
+            left: 50%;
+            top: -20px;
+        }
 
-.cursor{
-animation:blink .8s infinite;
-}
+        .ground {
+            position: absolute;
+            bottom: 170px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 420px;
+            height: 2px;
+            background: white;
+        }
 
-@keyframes blink{
-50%{
-opacity:0;
-}
-}
+        .treeCanvas {
+            position: absolute;
+            right: 20px;
+            bottom: 60px;
+            /* تم إضافة هذه الخاصية حتى لا يحجب المساحة الشفافة للكانفاس أي نقرات في البداية */
+            pointer-events: none; 
+        }
 
-.seed{
-position:absolute;
-width:14px;
-height:14px;
-background:#ff69b4;
-border-radius:50%;
-left:50%;
-top:-20px;
-transform:translateX(-50%);
-}
+        .glow {
+            position: absolute;
+            width: 650px;
+            height: 650px;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(255, 105, 180, .18),
+                transparent 70%
+            );
+            pointer-events: none;
+        }
 
-.ground{
-position:absolute;
-bottom:170px;
-left:50%;
-transform:translateX(-50%);
-width:420px;
-height:2px;
-background:white;
-}
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
 
-.treeCanvas{
-position:absolute;
-right:20px;
-bottom:60px;
-}
+        @keyframes twinkle {
+            from { opacity: .2; }
+            to { opacity: 1; }
+        }
 
-.glow{
-position:absolute;
-width:650px;
-height:650px;
-right:0;
-bottom:0;
-border-radius:50%;
-background:radial-gradient(
-circle,
-rgba(255,105,180,.18),
-transparent 70%
-);
-pointer-events:none;
-}
+        .petal {
+            position: absolute;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: .8;
+            animation: fall linear forwards;
+        }
 
-.star{
-position:absolute;
-background:white;
-border-radius:50%;
-animation:twinkle 2s infinite alternate;
-}
-.petal{
-    pointer-events:none;
-}
-
-
-@keyframes twinkle{
-from{
-opacity:.2;
-}
-to{
-opacity:1;
-}
-}
-
-.petal{
-position:absolute;
-font-size:14px;
-pointer-events:none;
-opacity:.8;
-animation:fall linear forwards;
-}
-
-@keyframes fall{
-
-0%{
-transform:translateY(-20px) rotate(0deg);
-opacity:1;
-}
-
-100%{
-transform:translateY(110vh) rotate(720deg);
-opacity:0;
-}
-
-}
-   
-</style>
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="page1">
-
-<div class="click-area" onclick="startAnimation()">
-
-<div class="big-heart">💗</div>
-
-<div class="click-text">
-Click Me :)<br>
-Birthday Queen !
-</div>
-
-<div class="click-line"></div>
-
-</div>
-
-</div>
-
-<div id="page2">
-
-<div id="message" class="message"></div>
-
-</div>
-<div class="seed" id="seed"></div>
-
-<div class="ground"></div>
-
-<div class="glow"></div>
-
-<canvas
-id="treeCanvas"
-class="treeCanvas"
-width="700"
-height="650">
-</canvas>
-
-<script>
-
-const canvas =
-document.getElementById("treeCanvas");
-
-const ctx =
-canvas.getContext("2d");
-
-</script>
-<script>
-   const ctx =
-canvas.getContext("2d");
-   function createStars(){
-
-for(let i=0;i<250;i++){
-
-const star=document.createElement("div");
-
-star.className="star";
-
-const size=Math.random()*4+1;
-
-star.style.width=size+"px";
-star.style.height=size+"px";
-
-star.style.left=
-Math.random()*window.innerWidth+"px";
-
-star.style.top=
-Math.random()*window.innerHeight+"px";
-
-star.style.animationDuration=
-(1+Math.random()*3)+"s";
-
-document.body.appendChild(star);
-
-}
-
-}
-
-function createPetals(){
-
-setInterval(()=>{
-
-const petal=document.createElement("div");
-
-petal.className="petal";
-
-petal.innerHTML="🌸";
-
-petal.style.left=
-Math.random()*window.innerWidth+"px";
-
-petal.style.animationDuration=
-(6+Math.random()*5)+"s";
-
-document.body.appendChild(petal);
-
-setTimeout(()=>{
-petal.remove();
-},12000);
-
-},250);
-
-}
-
-createStars();
-
-function startAnimation(){
-
-document.getElementById("page1")
-.style.display="none";
-
-document.getElementById("page2")
-.style.display="block";
-
-createPetals();
-
-const seed=
-document.getElementById("seed");
-
-seed.animate(
-[
-{top:"-20px"},
-{top:"calc(100vh - 177px)"}
-],
-{
-duration:1500,
-fill:"forwards"
-}
-);
-
-setTimeout(()=>{
-drawTree();
-},1600);
-
-}
-   function branch(x,y,len,angle,width){
-
-if(width<0.5){
-
-drawHeart(x,y);
-
-return;
-
-}
-
-ctx.beginPath();
-
-ctx.strokeStyle="#ff9fcf";
-
-ctx.lineWidth=width;
-
-ctx.moveTo(x,y);
-
-const x2=
-x+Math.cos(angle)*len;
-
-const y2=
-y+Math.sin(angle)*len;
-
-ctx.lineTo(x2,y2);
-
-ctx.stroke();
-
-setTimeout(()=>{
-
-branch(
-x2,
-y2,
-len*0.8,
-angle-0.4,
-width*0.7
-);
-
-branch(
-x2,
-y2,
-len*0.8,
-angle+0.4,
-width*0.7
-);
-
-},100);
-
-}
-
-function drawHeart(x,y){
-
-const colors=[
-"#ff69b4",
-"#ff1493",
-"#ff85c1",
-"#ffc0cb",
-"#ffd1dc"
-];
-
-for(let i=0;i<3;i++){
-
-ctx.fillStyle=
-colors[
-Math.floor(
-Math.random()*colors.length
-)
-];
-
-ctx.font=
-(12+Math.random()*18)
-+"px Arial";
-
-ctx.fillText(
-"❤",
-x+(Math.random()*12-6),
-y+(Math.random()*12-6)
-);
-
-}
-
-}
-
-function drawTree(){
-
-branch(
-350,
-600,
-120,
--Math.PI/2,
-14
-);
-
-setTimeout(()=>{
-typeMessage();
-},8500);
-
-}
-
-function typeMessage(){
-
-const text =
-`To My Birthday Queen 💗
-
-Happy Birthday ✨
-
-Today is all about you.
-
-I hope your heart is filled
-with happiness,
-your days with laughter,
-and your future with success.
-
-Thank you for every smile,
-every memory,
-and every beautiful moment.
-
-You deserve endless love,
-endless joy,
-and endless happiness.
-
-Have the most amazing
-birthday ever ❤️`;
-
-let i=0;
-
-const box=
-document.getElementById("message");
-
-function write(){
-
-if(i<text.length){
-
-box.innerHTML=
-text.substring(0,i+1)+
-"<span class='cursor'>|</span>";
-
-i++;
-
-setTimeout(write,45);
-
-}else{
-
-box.innerHTML=text;
-
-}
-
-}
-
-write();
-
-}
-   </script>
-
+    <div id="page1">
+        <div class="click-area" onclick="startAnimation()">
+            <div class="big-heart">💖</div>
+            <div class="click-text">
+                Click Me :)<br>
+                Birthday Queen !
+            </div>
+            <div class="click-line"></div>
+        </div>
+    </div>
+
+    <div id="page2">
+        <div id="message" class="message"></div>
+        <div class="seed" id="seed"></div>
+        <div class="ground"></div>
+        <div class="glow"></div>
+        <canvas id="treeCanvas" class="treeCanvas" width="700" height="650"></canvas>
+    </div>
+
+    <script>
+        // تعريف عناصر الـ DOM الأساسية أولاً
+        const canvas = document.getElementById("treeCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // إنشاء النجوم في الخلفية عند تحميل الصفحة مباشرة
+        createStars();
+
+        function createStars() {
+            for(let i = 0; i < 250; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                
+                const size = Math.random() * 4 + 1;
+                star.style.width = size + "px";
+                star.style.height = size + "px";
+                
+                star.style.left = Math.random() * window.innerWidth + "px";
+                star.style.top = Math.random() * window.innerHeight + "px";
+                
+                star.style.animationDuration = (1 + Math.random() * 3) + "s";
+                
+                document.body.appendChild(star);
+            }
+        }
+
+        // تشغيل الأنيميشن عند النقر على القلب
+        function startAnimation() {
+            document.getElementById("page1").style.display = "none";
+            document.getElementById("page2").style.display = "block";
+            
+            createPetals();
+            
+            const seed = document.getElementById("seed");
+            seed.animate(
+                [
+                    { top: "-20px" },
+                    { top: "calc(100vh - 177px)" }
+                ],
+                {
+                    duration: 1500,
+                    fill: "forwards"
+                }
+            );
+            
+            setTimeout(() => {
+                drawTree();
+            }, 1600);
+        }
+
+        // إنشاء تساقط أوراق الورد (البتلات)
+        function createPetals() {
+            setInterval(() => {
+                const petal = document.createElement("div");
+                petal.className = "petal";
+                petal.innerHTML = "🌸";
+                
+                petal.style.left = Math.random() * window.innerWidth + "px";
+                petal.style.animationDuration = (6 + Math.random() * 5) + "s";
+                
+                document.body.appendChild(petal);
+                
+                setTimeout(() => {
+                    petal.remove();
+                }, 12000);
+            }, 250);
+        }
+
+        // رسم غصون الشجرة
+        function branch(x, y, len, angle, width) {
+            if (width < 0.5) {
+                drawHeart(x, y);
+                return;
+            }
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "#ff9fcf";
+            ctx.lineWidth = width;
+            ctx.moveTo(x, y);
+            
+            const x2 = x + Math.cos(angle) * len;
+            const y2 = y + Math.sin(angle) * len;
+            
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            
+            setTimeout(() => {
+                branch(x2, y2, len * 0.8, angle - 0.4, width * 0.7);
+                branch(x2, y2, len * 0.8, angle + 0.4, width * 0.7);
+            }, 100);
+        }
+
+        // رسم القلوب الصغيرة المتفتحة على الشجرة
+        function drawHeart(x, y) {
+            const colors = ["#ff69b4", "#ff1493", "#ff85c1", "#ffc0cb", "#ffd1dc"];
+            
+            for (let i = 0; i < 3; i++) {
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.font = (12 + Math.random() * 18) + "px Arial";
+                ctx.fillText(
+                    "❤️", 
+                    x + (Math.random() * 12 - 6), 
+                    y + (Math.random() * 12 - 6)
+                );
+            }
+        }
+
+        // بدء رسم الشجرة بالكامل واطلاق دالة الرسالة بعدها
+        function drawTree() {
+            // المعاملات: x, y, طول الجذع، الزاوية (للأعلى)، سمك الجذع
+            branch(350, 600, 120, -Math.PI / 2, 14);
+            
+            // تظهر الرسالة بعد انتهاء نمو الشجرة تقريباً (8.5 ثوانٍ)
+            setTimeout(() => {
+                typeMessage();
+            }, 8500);
+        }
+
+        // تأثير كتابة نص التهنئة
+        function typeMessage() {
+            const text = `To My Birthday Queen 💖\n\nHappy Birthday ✨\n\nToday is all about you.\n\nI hope your heart is filled\nwith happiness,\nyour days with laughter,\nand your future with success.\n\nThank you for every smile,\nevery memory,\nand every beautiful moment.\n\nYou deserve endless love,\nendless joy,\nand endless happiness.\n\nHave the most amazing\nbirthday ever ❤️`;
+            
+            let i = 0;
+            const box = document.getElementById("message");
+            
+            function write() {
+                if (i < text.length) {
+                    box.innerHTML = text.substring(0, i + 1) + "<span class='cursor'>|</span>";
+                    i++;
+                    setTimeout(write, 45);
+                } else {
+                    box.innerHTML = text;
+                }
+            }
+            
+            write();
+        }
+    </script>
 </body>
 </html>
