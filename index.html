@@ -6,269 +6,301 @@
 <title>Birthday Queen ❤️</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+    *{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-    background:#000;
-    overflow:hidden;
-    font-family:Arial, sans-serif;
-    color:white;
+background:#000;
+overflow:hidden;
+font-family:Arial,sans-serif;
+color:white;
 }
 
 /* الصفحة الأولى */
 
 #page1{
-    position:absolute;
-    width:100%;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
+position:absolute;
+width:100%;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
 }
 
-.heart-btn{
-    font-size:70px;
-    color:#ffb6c1;
-    cursor:pointer;
-    border:none;
-    background:none;
-    transition:.3s;
+.click-area{
+cursor:pointer;
+text-align:center;
 }
 
-.heart-btn:hover{
-    transform:scale(1.15);
+.big-heart{
+font-size:90px;
+animation:pulse 1.5s infinite;
 }
 
-.label{
-    margin-top:10px;
-    text-align:left;
-    color:white;
+@keyframes pulse{
+50%{
+transform:scale(1.1);
+}
 }
 
-.line{
-    width:250px;
-    height:3px;
-    background:white;
-    margin-top:8px;
+.click-text{
+margin-top:10px;
+font-size:18px;
+}
+
+.click-line{
+width:260px;
+height:2px;
+background:white;
+margin-top:10px;
 }
 
 /* الصفحة الثانية */
 
 #page2{
-    position:absolute;
-    width:100%;
-    height:100vh;
-    display:none;
+display:none;
+position:absolute;
+width:100%;
+height:100vh;
+overflow:hidden;
 }
 
-.dot{
-    position:absolute;
-    width:16px;
-    height:16px;
-    border-radius:50%;
-    background:pink;
-    left:50%;
-    top:-30px;
-    transform:translateX(-50%);
+.seed{
+position:absolute;
+width:14px;
+height:14px;
+background:#ff69b4;
+border-radius:50%;
+left:50%;
+top:-20px;
+transform:translateX(-50%);
 }
 
 .ground{
-    position:absolute;
-    width:400px;
-    height:3px;
-    background:white;
-    left:50%;
-    bottom:180px;
-    transform:translateX(-50%);
+position:absolute;
+bottom:170px;
+left:50%;
+transform:translateX(-50%);
+width:400px;
+height:2px;
+background:white;
 }
 
-.trunk{
-    position:absolute;
-    width:22px;
-    height:0;
-    background:#ffc0cb;
-    left:50%;
-    bottom:180px;
-    transform:translateX(-50%);
-}
-
-.tree{
-    position:absolute;
-    left:50%;
-    bottom:380px;
-    transform:translateX(-50%);
-    width:320px;
-    height:260px;
-}
-
-.heart{
-    position:absolute;
-    opacity:0;
-    font-size:22px;
-    animation:showHeart .5s forwards;
-}
-
-@keyframes showHeart{
-    to{
-        opacity:1;
-    }
+.treeCanvas{
+position:absolute;
+right:50px;
+bottom:120px;
 }
 
 .message{
-    position:absolute;
-    left:120px;
-    top:180px;
-    width:340px;
-    font-size:28px;
-    line-height:1.6;
-    white-space:pre-line;
+position:absolute;
+left:70px;
+top:180px;
+width:500px;
+font-size:32px;
+line-height:1.5;
+white-space:pre-line;
 }
 
 .cursor{
-    animation:blink .7s infinite;
+animation:blink .8s infinite;
 }
 
 @keyframes blink{
-    50%{
-        opacity:0;
-    }
+50%{
+opacity:0;
 }
-</style>
+}
+    </style>
 </head>
 
 <body>
 
 <div id="page1">
 
-    <button class="heart-btn" onclick="startAnimation()">
-        ❤️
-    </button>
+<div class="click-area" onclick="startAnimation()">
 
-    <div class="label">
-        Click Me :)<br>
-        Birthday Queen !
-    </div>
+<div class="big-heart">💗</div>
 
-    <div class="line"></div>
+<div class="click-text">
+Click Me :)<br>
+Birthday Queen !
+</div>
+
+<div class="click-line"></div>
+
+</div>
 
 </div>
 
 <div id="page2">
 
-    <div class="dot" id="dot"></div>
+<div class="seed" id="seed"></div>
 
-    <div class="ground"></div>
+<div class="ground"></div>
 
-    <div class="trunk" id="trunk"></div>
+<canvas
+id="treeCanvas"
+class="treeCanvas"
+width="600"
+height="600">
+</canvas>
 
-    <div class="tree" id="tree"></div>
-
-    <div class="message" id="message"></div>
+<div id="message" class="message"></div>
 
 </div>
 
 <script>
+    const canvas =
+document.getElementById("treeCanvas");
+
+const ctx =
+canvas.getContext("2d");
 
 function startAnimation(){
 
-    document.getElementById("page1").style.display="none";
-    document.getElementById("page2").style.display="block";
+document.getElementById("page1")
+.style.display="none";
 
-    const dot=document.getElementById("dot");
+document.getElementById("page2")
+.style.display="block";
 
-    dot.animate([
-        {top:"-30px"},
-        {top:"calc(100vh - 190px)"}
-    ],{
-        duration:1500,
-        fill:"forwards"
-    });
+const seed =
+document.getElementById("seed");
 
-    setTimeout(growTree,1500);
+seed.animate(
+[
+{top:"-20px"},
+{top:"calc(100vh - 177px)"}
+],
+{
+duration:1500,
+fill:"forwards"
+}
+);
+
+setTimeout(drawTree,1600);
+
+}
+    function branch(x,y,len,angle,width){
+
+if(width<2){
+drawHeart(x,y);
+return;
 }
 
-function growTree(){
+ctx.beginPath();
 
-    const trunk=document.getElementById("trunk");
+ctx.strokeStyle="#ff9fcf";
 
-    trunk.animate([
-        {height:"0px"},
-        {height:"220px"}
-    ],{
-        duration:1500,
-        fill:"forwards"
-    });
+ctx.lineWidth=width;
 
-    setTimeout(createHeartTree,1500);
+ctx.moveTo(x,y);
+
+const x2=
+x+Math.cos(angle)*len;
+
+const y2=
+y+Math.sin(angle)*len;
+
+ctx.lineTo(x2,y2);
+
+ctx.stroke();
+
+setTimeout(()=>{
+
+branch(
+x2,
+y2,
+len*0.75,
+angle-0.4,
+width*0.7
+);
+
+branch(
+x2,
+y2,
+len*0.75,
+angle+0.4,
+width*0.7
+);
+
+},100);
+
 }
 
-function createHeartTree(){
+function drawTree(){
 
-    const tree=document.getElementById("tree");
+branch(
+300,
+550,
+100,
+-Math.PI/2,
+12
+);
 
-    for(let i=0;i<180;i++){
+setTimeout(()=>{
+typeMessage();
+},5000);
 
-        const h=document.createElement("div");
+}
+    function drawHeart(x,y){
 
-        h.className="heart";
+ctx.fillStyle="#ff69b4";
 
-        h.innerHTML="❤️";
+ctx.font=
+(12+Math.random()*14)+"px Arial";
 
-        const angle=Math.random()*Math.PI*2;
-        const radius=Math.random()*120;
+ctx.fillText("❤",x,y);
 
-        const x=Math.cos(angle)*radius+140;
-        const y=Math.sin(angle)*radius+110;
+}
+    function typeMessage(){
 
-        h.style.left=x+"px";
-        h.style.top=y+"px";
+const text=
+`To My Birthday Queen 💗
 
-        h.style.animationDelay=(i*0.03)+"s";
+Happy Birthday ✨
 
-        tree.appendChild(h);
-    }
+I hope your day is filled
+with happiness, love,
+and beautiful moments.
 
-    setTimeout(typeMessage,2500);
+Thank you for being
+part of my life ❤️`;
+
+let i=0;
+
+const box=
+document.getElementById("message");
+
+function write(){
+
+if(i<text.length){
+
+box.innerHTML=
+text.substring(0,i+1)+
+"<span class='cursor'>|</span>";
+
+i++;
+
+setTimeout(write,45);
+
+}else{
+
+box.innerHTML=text;
+
 }
 
-function typeMessage(){
-
-    const text=
-`Hey you 💕
-Happy Birthday 🎈
-May God bless you 🍀
-And give u many happiness 💞
-Just saying... you're pretty awesome ❤️
-Sending good vibes and maybe a wink 😉`;
-
-    let i=0;
-
-    const box=document.getElementById("message");
-
-    function typing(){
-
-        if(i<text.length){
-
-            box.innerHTML=text.substring(0,i+1)+"<span class='cursor'>|</span>";
-
-            i++;
-
-            setTimeout(typing,55);
-        }
-        else{
-            box.innerHTML=text;
-        }
-    }
-
-    typing();
 }
 
-</script>
+write();
+
+}
+    </script>
 
 </body>
 </html>
