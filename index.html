@@ -6,7 +6,8 @@
 <title>Birthday Queen ❤️</title>
 
 <style>
-    *{
+
+*{
 margin:0;
 padding:0;
 box-sizing:border-box;
@@ -29,6 +30,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+background:black;
 }
 
 .click-area{
@@ -37,13 +39,13 @@ text-align:center;
 }
 
 .big-heart{
-font-size:90px;
+font-size:95px;
 animation:pulse 1.5s infinite;
 }
 
 @keyframes pulse{
 50%{
-transform:scale(1.1);
+transform:scale(1.12);
 }
 }
 
@@ -69,7 +71,28 @@ height:100vh;
 overflow:hidden;
 }
 
-.seed{
+.message{
+position:absolute;
+left:30px;
+top:140px;
+width:380px;
+font-size:30px;
+line-height:1.7;
+white-space:pre-line;
+text-align:left;
+}
+
+.cursor{
+animation:blink .8s infinite;
+}
+
+@keyframes blink{
+50%{
+opacity:0;
+}
+}
+
+<.seed{
 position:absolute;
 width:14px;
 height:14px;
@@ -85,37 +108,69 @@ position:absolute;
 bottom:170px;
 left:50%;
 transform:translateX(-50%);
-width:400px;
+width:420px;
 height:2px;
 background:white;
 }
 
 .treeCanvas{
 position:absolute;
-right:50px;
-bottom:120px;
+right:20px;
+bottom:60px;
 }
 
-.message{
+.glow{
 position:absolute;
-left:70px;
-top:180px;
-width:500px;
-font-size:32px;
-line-height:1.5;
-white-space:pre-line;
+width:650px;
+height:650px;
+right:0;
+bottom:0;
+border-radius:50%;
+background:radial-gradient(
+circle,
+rgba(255,105,180,.18),
+transparent 70%
+);
+pointer-events:none;
 }
 
-.cursor{
-animation:blink .8s infinite;
+.star{
+position:absolute;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite alternate;
 }
 
-@keyframes blink{
-50%{
+@keyframes twinkle{
+from{
+opacity:.2;
+}
+to{
+opacity:1;
+}
+}
+
+.petal{
+position:absolute;
+font-size:14px;
+pointer-events:none;
+opacity:.8;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+
+0%{
+transform:translateY(-20px) rotate(0deg);
+opacity:1;
+}
+
+100%{
+transform:translateY(110vh) rotate(720deg);
 opacity:0;
 }
-}
-    </style>
+
+}/style>
 </head>
 
 <body>
@@ -139,27 +194,89 @@ Birthday Queen !
 
 <div id="page2">
 
+<div id="message" class="message"></div>
+
+</div>
 <div class="seed" id="seed"></div>
 
 <div class="ground"></div>
 
+<div class="glow"></div>
+
 <canvas
 id="treeCanvas"
 class="treeCanvas"
-width="600"
-height="600">
+width="700"
+height="650">
 </canvas>
 
-<div id="message" class="message"></div>
-
-</div>
-
 <script>
-    const canvas =
+
+const canvas =
 document.getElementById("treeCanvas");
 
 const ctx =
 canvas.getContext("2d");
+
+</script>
+   <script>
+   const ctx =
+canvas.getContext("2d");
+   function createStars(){
+
+for(let i=0;i<250;i++){
+
+const star=document.createElement("div");
+
+star.className="star";
+
+const size=Math.random()*4+1;
+
+star.style.width=size+"px";
+star.style.height=size+"px";
+
+star.style.left=
+Math.random()*window.innerWidth+"px";
+
+star.style.top=
+Math.random()*window.innerHeight+"px";
+
+star.style.animationDuration=
+(1+Math.random()*3)+"s";
+
+document.body.appendChild(star);
+
+}
+
+}
+
+function createPetals(){
+
+setInterval(()=>{
+
+const petal=document.createElement("div");
+
+petal.className="petal";
+
+petal.innerHTML="🌸";
+
+petal.style.left=
+Math.random()*window.innerWidth+"px";
+
+petal.style.animationDuration=
+(6+Math.random()*5)+"s";
+
+document.body.appendChild(petal);
+
+setTimeout(()=>{
+petal.remove();
+},12000);
+
+},250);
+
+}
+
+createStars();
 
 function startAnimation(){
 
@@ -169,7 +286,9 @@ document.getElementById("page1")
 document.getElementById("page2")
 .style.display="block";
 
-const seed =
+createPetals();
+
+const seed=
 document.getElementById("seed");
 
 seed.animate(
@@ -183,14 +302,19 @@ fill:"forwards"
 }
 );
 
-setTimeout(drawTree,1600);
+setTimeout(()=>{
+drawTree();
+},1600);
 
 }
-    function branch(x,y,len,angle,width){
+   function branch(x,y,len,angle,width){
 
-if(width<2){
+if(width<0.5){
+
 drawHeart(x,y);
+
 return;
+
 }
 
 ctx.beginPath();
@@ -216,7 +340,7 @@ setTimeout(()=>{
 branch(
 x2,
 y2,
-len*0.75,
+len*0.8,
 angle-0.4,
 width*0.7
 );
@@ -224,7 +348,7 @@ width*0.7
 branch(
 x2,
 y2,
-len*0.75,
+len*0.8,
 angle+0.4,
 width*0.7
 );
@@ -233,44 +357,79 @@ width*0.7
 
 }
 
+function drawHeart(x,y){
+
+const colors=[
+"#ff69b4",
+"#ff1493",
+"#ff85c1",
+"#ffc0cb",
+"#ffd1dc"
+];
+
+for(let i=0;i<3;i++){
+
+ctx.fillStyle=
+colors[
+Math.floor(
+Math.random()*colors.length
+)
+];
+
+ctx.font=
+(12+Math.random()*18)
++"px Arial";
+
+ctx.fillText(
+"❤",
+x+(Math.random()*12-6),
+y+(Math.random()*12-6)
+);
+
+}
+
+}
+
 function drawTree(){
 
 branch(
-300,
-550,
-100,
+350,
+600,
+120,
 -Math.PI/2,
-12
+14
 );
 
 setTimeout(()=>{
 typeMessage();
-},5000);
+},8500);
 
 }
-    function drawHeart(x,y){
 
-ctx.fillStyle="#ff69b4";
+function typeMessage(){
 
-ctx.font=
-(12+Math.random()*14)+"px Arial";
-
-ctx.fillText("❤",x,y);
-
-}
-    function typeMessage(){
-
-const text=
+const text =
 `To My Birthday Queen 💗
 
 Happy Birthday ✨
 
-I hope your day is filled
-with happiness, love,
-and beautiful moments.
+Today is all about you.
 
-Thank you for being
-part of my life ❤️`;
+I hope your heart is filled
+with happiness,
+your days with laughter,
+and your future with success.
+
+Thank you for every smile,
+every memory,
+and every beautiful moment.
+
+You deserve endless love,
+endless joy,
+and endless happiness.
+
+Have the most amazing
+birthday ever ❤️`;
 
 let i=0;
 
@@ -300,7 +459,7 @@ box.innerHTML=text;
 write();
 
 }
-    </script>
+</script>
 
 </body>
 </html>
