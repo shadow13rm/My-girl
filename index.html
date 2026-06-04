@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,34 +32,44 @@
             z-index: 99999; 
         }
 
+        /* تصميم منطقة الضغط لمطابقة شكل تريند الفيديو الأصلي */
         .click-area {
             cursor: pointer;
-            text-align: center;
             position: relative;
             z-index: 100000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .big-heart {
-            font-size: 95px;
+            font-size: 65px;
+            color: #ffb6c1;
             animation: pulse 1.5s infinite;
+            display: inline-block;
         }
 
         @keyframes pulse {
-            50% {
-                transform: scale(1.12);
-            }
+            50% { transform: scale(1.1); }
+        }
+
+        .text-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .click-text {
-            margin-top: 10px;
-            font-size: 18px;
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.4;
         }
 
         .click-line {
-            width: 260px;
+            width: 200px;
             height: 2px;
-            background: white;
-            margin-top: 10px;
+            background: #ccc;
+            margin-top: 5px;
         }
 
         /* ----- الصفحة الثانية ----- */
@@ -72,40 +82,36 @@
             z-index: 1;
         }
 
-        /* محاذاة النص إلى اليمين وترتيب موقعه يسار الشاشة */
+        /* تنسيق النص الأيسر تماماً مثل لقطة الشاشة المرفقة */
         .message {
             position: absolute;
-            right: auto;
-            left: 5%;
-            top: 8%;
-            width: 45%;
-            font-size: 24px;
+            left: 8%;
+            top: 25%;
+            width: 35%;
+            font-size: 20px;
             line-height: 1.8;
             white-space: pre-line;
-            text-align: right;
-            direction: rtl; /* لدعم الكتابة العربية بشكل صحيح */
+            text-align: left;
             z-index: 10;
+            font-family: monospace;
         }
 
         .cursor {
             animation: blink .8s infinite;
-            display: inline-block;
-            margin-right: 2px;
         }
 
         @keyframes blink {
-            50% {
-                opacity: 0;
-            }
+            50% { opacity: 0; }
         }
 
+        /* البذرة (النقطة التي تسقط من الأعلى) */
         .seed {
             position: absolute;
-            width: 14px;
-            height: 14px;
-            background: #ff69b4;
+            width: 12px;
+            height: 12px;
+            background: #ff7da7;
             border-radius: 50%;
-            left: 70%; /* محاذاة البذرة مع جذع الشجرة الجديد */
+            left: 65%; /* متموضعة فوق نقطة بداية جذع الشجرة */
             top: -20px;
         }
 
@@ -113,44 +119,20 @@
         .ground {
             position: absolute;
             bottom: 120px;
-            left: 5%;
-            width: 90%;
-            height: 2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
             background: white;
         }
 
-        /* النص الموجود أسفل الخط تماماً */
-        .footer-text {
-            position: absolute;
-            bottom: 85px;
-            left: 5%;
-            font-size: 16px;
-            font-family: Arial, sans-serif;
-            color: white;
-            z-index: 10;
-        }
-
-        /* وضع الكانفاس في جهة اليمين ليطابق التصميم */
+        /* وضع الكانفاس ليكون جذع الشجرة فوق الخط وبمكان سقوط النقطة تماماً */
         .treeCanvas {
             position: absolute;
-            right: 5%;
-            bottom: 120px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none; 
-        }
-
-        .glow {
-            position: absolute;
-            width: 650px;
-            height: 650px;
-            right: 5%;
-            bottom: 60px;
-            border-radius: 50%;
-            background: radial-gradient(
-                circle,
-                rgba(255, 105, 180, .15),
-                transparent 70%
-            );
-            pointer-events: none;
         }
 
         .star {
@@ -161,27 +143,8 @@
         }
 
         @keyframes twinkle {
-            from { opacity: .2; }
-            to { opacity: 1; }
-        }
-
-        .petal {
-            position: absolute;
-            font-size: 14px;
-            pointer-events: none;
-            opacity: .8;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-20px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(110vh) rotate(720deg);
-                opacity: 0;
-            }
+            from { opacity: .1; }
+            to { opacity: 0.8; }
         }
     </style>
 </head>
@@ -189,12 +152,14 @@
 
     <div id="page1">
         <div class="click-area" onclick="startAnimation()">
-            <div class="big-heart">💖</div>
-            <div class="click-text">
-                Click Me :)<br>
-                Birthday Queen !
+            <div class="big-heart">♥</div>
+            <div class="text-group">
+                <div class="click-text">
+                    Click Me :)<br>
+                    Birthday Queen !
+                </div>
+                <div class="click-line"></div>
             </div>
-            <div class="click-line"></div>
         </div>
     </div>
 
@@ -202,31 +167,34 @@
         <div id="message" class="message"></div>
         <div class="seed" id="seed"></div>
         <div class="ground"></div>
-        <div class="footer-text">click me :) to flower the happy birthday</div>
-        <div class="glow"></div>
-        <canvas id="treeCanvas" class="treeCanvas" width="600" height="550"></canvas>
+        <canvas id="treeCanvas" class="treeCanvas"></canvas>
     </div>
 
     <script>
         const canvas = document.getElementById("treeCanvas");
         const ctx = canvas.getContext("2d");
 
+        // ضبط أبعاد الكانفاس لتطابق أبعاد الشاشة الحقيقية بدقة
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // إنشاء النجوم في الخلفية
         createStars();
 
         function createStars() {
-            for(let i = 0; i < 250; i++) {
+            for(let i = 0; i < 150; i++) {
                 const star = document.createElement("div");
                 star.className = "star";
-                
-                const size = Math.random() * 3 + 1;
+                const size = Math.random() * 2 + 1;
                 star.style.width = size + "px";
                 star.style.height = size + "px";
-                
                 star.style.left = Math.random() * window.innerWidth + "px";
                 star.style.top = Math.random() * window.innerHeight + "px";
-                
-                star.style.animationDuration = (1 + Math.random() * 3) + "s";
-                
+                star.style.animationDuration = (1.5 + Math.random() * 3) + "s";
                 document.body.appendChild(star);
             }
         }
@@ -235,52 +203,41 @@
             document.getElementById("page1").style.display = "none";
             document.getElementById("page2").style.display = "block";
             
-            createPetals();
-            
             const seed = document.getElementById("seed");
-            // تحريك البذرة لتسقط على قاعدة الشجرة الجديدة تماماً
+            const groundY = window.innerHeight - 120; // موقع الخط الأرضي
+            
+            // سقوط النقطة من الأعلى حتى ترتطم بالخط الأبيض تماماً
             seed.animate(
                 [
                     { top: "-20px" },
-                    { top: "calc(100vh - 127px)" }
+                    { top: (groundY - 6) + "px" }
                 ],
                 {
-                    duration: 1500,
-                    fill: "forwards"
+                    duration: 1200,
+                    fill: "forwards",
+                    easing: "ease-in"
                 }
             );
             
+            // عند لحظة الارتطام، تختفي النقطة وتبدأ الشجرة بالخروج من مكان السقوط
             setTimeout(() => {
-                drawTree();
-            }, 1600);
+                seed.style.display = "none";
+                drawTree(window.innerWidth * 0.65, groundY);
+            }, 1200);
         }
 
-        function createPetals() {
-            setInterval(() => {
-                const petal = document.createElement("div");
-                petal.className = "petal";
-                petal.innerHTML = "🌸";
-                
-                petal.style.left = Math.random() * window.innerWidth + "px";
-                petal.style.animationDuration = (6 + Math.random() * 5) + "s";
-                
-                document.body.appendChild(petal);
-                
-                setTimeout(() => {
-                    petal.remove();
-                }, 12000);
-            }, 250);
-        }
-
-        function branch(x, y, len, angle, width) {
-            if (width < 0.5) {
-                drawHeart(x, y);
+        // دالة مخصصة لرسم الأغصان لتجبر الشجرة على أخذ كيرف ومنحنى شكل القلب التلقائي
+        function branch(x, y, len, angle, width, generation) {
+            if (generation > 11) {
+                drawHeartLeaves(x, y);
                 return;
             }
             
             ctx.beginPath();
-            ctx.strokeStyle = "#ff9fcf";
+            // تدرج لوني دافئ يبدأ بلون الجذع الوردي السميك المماثل للصورة ويتغير تدريجياً للأغصان
+            ctx.strokeStyle = generation < 3 ? "#ffaec9" : "#ff7da7";
             ctx.lineWidth = width;
+            ctx.lineCap = "round";
             ctx.moveTo(x, y);
             
             const x2 = x + Math.cos(angle) * len;
@@ -289,39 +246,53 @@
             ctx.lineTo(x2, y2);
             ctx.stroke();
             
+            // معادلة ذكية لتغيير زوايا الأغصان تدريجياً لتقوس الهيكل الخارجي للشجرة لتصبح مثل القلب تماماً
+            let angleOffset1 = 0.35;
+            let angleOffset2 = 0.35;
+            
+            if (generation >= 2 && generation <= 5) {
+                angleOffset1 = 0.55; 
+                angleOffset2 = 0.55;
+            }
+
             setTimeout(() => {
-                branch(x2, y2, len * 0.8, angle - 0.38, width * 0.7);
-                branch(x2, y2, len * 0.8, angle + 0.38, width * 0.7);
-            }, 100);
+                // تفرع فرعي ثنائي متناسق لبناء هيكل القلب المتفرع
+                branch(x2, y2, len * 0.82, angle - angleOffset1, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.82, angle + angleOffset2, width * 0.72, generation + 1);
+            }, 90);
         }
 
-        function drawHeart(x, y) {
-            const colors = ["#ff69b4", "#ff1493", "#ff85c1", "#ffc0cb", "#ffd1dc"];
+        // رسم أوراق القلوب المتكدسة لتعبئة الشجرة وجعلها تبدو ممتلئة تماماً باللون الفوشي والوردي والأصفر
+        function drawHeartLeaves(x, y) {
+            // الألوان المأخوذة من الصورة المرفقة بالترتيب (فوشي، وردي، برتقالي خفيف، أصفر، بنفسجي)
+            const colors = ["#ff1493", "#ff69b4", "#ffa500", "#fffa65", "#ff66b2", "#ffb6c1"];
             
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 4; i++) {
                 ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-                ctx.font = (10 + Math.random() * 14) + "px Arial";
-                // رسم القلوب الشجرية الوردية الصغيرة المماثلة لطلبك
+                ctx.font = (12 + Math.random() * 16) + "px Arial";
+                // نستخدم رمز القلب المكتنز لتظهر الشجرة كثيفة وجميلة
                 ctx.fillText(
-                    "🌸", 
-                    x + (Math.random() * 16 - 8), 
-                    y + (Math.random() * 16 - 8)
+                    "♥", 
+                    x + (Math.random() * 36 - 18), 
+                    y + (Math.random() * 36 - 18)
                 );
             }
         }
 
-        function drawTree() {
-            // رسم الجذع في منتصف مساحة الكانفاس المخصصة له (العرض 600، الارتفاع 550)
-            branch(300, 550, 105, -Math.PI / 2, 11);
+        // بدء إنبات الشجرة من نقطة الارتطام
+        function drawTree(startX, startY) {
+            // الجذع الرئيسي يبدأ غليظاً (سمك 18) ويتجه للأعلى مباشرة (-Math.PI / 2)
+            branch(startX, startY, 95, -Math.PI / 2, 18, 1);
             
+            // تشغيل تأثير الكتابة الإنجليزية بالتزامن مع نمو أوراق الشجرة
             setTimeout(() => {
                 typeMessage();
-            }, 8500);
+            }, 3000);
         }
 
+        // نص التهنئة باللغة الإنجليزية وتأثير الـ Typewriter مطابق تماماً للفيديو المرسل
         function typeMessage() {
-            // النص باللغة العربية مطابق تماماً لطلبك في التصميم
-            const text = `إلى ملكة عيد ميلادي 💖\n\nعيد ميلاد سعيد ✨\n\nاليوم كله لكِ.\n\nأتمنى أن يمتلئ قلبكِ\nبالسعـادة،\nوأيامكِ بالضحكِ،\nومستقبلكِ بالنـجاح.\n\nشكراً لكل ابتسامة،\nولكل ذكرى،\nولكل لحظة جميلة.\n\nتستحقين حباً لا ينتهي،\nوفرحة لا تنتهي،\nوسعادة لا تنتهي.\n\nأتمنى لكِ أجمل\nعيد ميلاد على الإطلاق ❤️`;
+            const text = `Hey you 💕\nHappy Birthday 🎈\nMay God bless you 🍀\nAnd give u many happiness 💞\nJust saying... you're pretty\nawesome 💖\nSending good vibes and maybe a\nwink 😉`;
             
             let i = 0;
             const box = document.getElementById("message");
@@ -330,9 +301,9 @@
                 if (i < text.length) {
                     box.innerHTML = text.substring(0, i + 1) + "<span class='cursor'>|</span>";
                     i++;
-                    setTimeout(write, 55); // سرعة متناسقة ومناسبة للقراءة العربية
+                    setTimeout(write, 50); 
                 } else {
-                    box.innerHTML = text;
+                    box.innerHTML = text; // إبقاء النص كاملاً بدون خط المؤشر عند الانتهاء
                 }
             }
             
