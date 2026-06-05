@@ -286,7 +286,7 @@
             }
 
             setTimeout(() => {
-                // تركنا التمدد على 0.83 لتعطي حجم كبير للشجرة
+                // التمدد لسه 0.83 ليعطي التفرع الكثيف
                 branch(x2, y2, len * 0.83, angle - angleOffset1, width * 0.72, generation + 1);
                 branch(x2, y2, len * 0.83, angle + angleOffset2, width * 0.72, generation + 1);
             }, 70); 
@@ -322,8 +322,8 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            // تم تعديل طول الجذع ليصبح 110 للموبايل
-            const trunkLen = isMobile ? 110 : 140; 
+            // تم التعديل إلى 85 للموبايل
+            const trunkLen = isMobile ? 85 : 140; 
             const trunkWidth = isMobile ? 18 : 24; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
