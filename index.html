@@ -311,13 +311,12 @@
                 let lx = x + (Math.random() * 36 - 18);
                 let ly = y + (Math.random() * 36 - 18);
 
-                // رسم الشجرة بكامل قلوبها
                 ctx.fillStyle = color;
                 ctx.font = size + "px Arial";
                 ctx.fillText("♥", lx, ly);
 
-                // ** التعديل الأساسي لحل التقطيع: نأخذ فقط 8% من القلوب للانفجار **
-                if (Math.random() < 0.08) { 
+                // ** التعديل هنا: 18.5% من الـ 8000 قلب بتعطينا تقريباً 1500 قلب تتطاير **
+                if (Math.random() < 0.185) { 
                     leavesPos.push({
                         x: lx,
                         y: ly,
