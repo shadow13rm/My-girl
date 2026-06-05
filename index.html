@@ -19,6 +19,20 @@
             color: white;
         }
 
+        /* ----- النجوم في الخلفية ----- */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes twinkle {
+            from { opacity: .1; }
+            to { opacity: 0.8; }
+        }
+
         /* ----- الصفحة الأولى ----- */
         #page1 {
             position: absolute;
@@ -71,35 +85,14 @@
             margin-top: 5px;
         }
 
-        /* ----- الصفحة الثانية ----- */
+        /* ----- الصفحة الثانية (الشجرة) ----- */
         #page2 {
             display: none;
             position: absolute;
             width: 100%;
             height: 100vh;
             overflow: hidden;
-            z-index: 1;
-        }
-
-        .message {
-            position: absolute;
-            left: 8%;
-            top: 25%;
-            width: 45%;
-            font-size: 20px;
-            line-height: 1.8;
-            white-space: pre-line;
-            text-align: left;
             z-index: 10;
-            font-family: monospace;
-        }
-
-        .cursor {
-            animation: blink .8s infinite;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
         }
 
         .seed {
@@ -127,33 +120,68 @@
             top: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; 
+            cursor: pointer;
+            z-index: 20;
         }
 
-        .star {
+        #tapHint {
             position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
+            top: 15%;
+            width: 100%;
+            text-align: center;
+            color: #ffb6c1;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            animation: pulse 1.5s infinite;
+            display: none;
+            z-index: 30;
+            pointer-events: none;
+            text-shadow: 0 0 10px #ff69b4;
         }
 
-        @keyframes twinkle {
-            from { opacity: .1; }
-            to { opacity: 0.8; }
+        /* ----- الصفحة الثالثة (الرسالة) ----- */
+        #page3 {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
         }
 
-        /* ----- تعديلات الموبايل (Responsive Design) ----- */
+        .message {
+            font-size: 20px;
+            line-height: 1.8;
+            white-space: pre-line;
+            text-align: center;
+            font-family: monospace;
+            padding: 25px 30px;
+            background: rgba(20, 20, 20, 0.75);
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
+            border: 1px solid rgba(255, 105, 180, 0.4);
+            backdrop-filter: blur(5px);
+            max-width: 90%;
+        }
+
+        .cursor {
+            animation: blink .8s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* ----- تعديلات الموبايل ----- */
         @media (max-width: 768px) {
-            .message {
-                left: 5%;
-                top: 8%; 
-                width: 90%; 
-                font-size: 16px; 
-                line-height: 1.6;
-            }
             .seed {
                 left: 50%; 
                 margin-left: -6px;
+            }
+            .message {
+                font-size: 17px;
+                padding: 20px;
             }
         }
     </style>
@@ -174,16 +202,24 @@
     </div>
 
     <div id="page2">
-        <div id="message" class="message"></div>
+        <div id="tapHint">✨ Tap the Tree ✨</div>
         <div class="seed" id="seed"></div>
-        <div class="ground"></div>
+        <div class="ground" id="ground"></div>
         <canvas id="treeCanvas" class="treeCanvas"></canvas>
+    </div>
+
+    <div id="page3">
+        <div id="message" class="message"></div>
     </div>
 
     <script>
         const canvas = document.getElementById("treeCanvas");
         const ctx = canvas.getContext("2d");
+        
+        let leavesPos = []; // لتخزين أماكن القلوب لعمل الانفجار
+        let isTreeReady = false; // للتأكد من انتهاء رسم الشجرة قبل الضغط
 
+        // ضبط حجم الـ Canvas
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -207,6 +243,7 @@
             }
         }
 
+        // بدء الحركة (اختفاء صفحة 1 وظهور البذرة)
         function startAnimation() {
             document.getElementById("page1").style.display = "none";
             document.getElementById("page2").style.display = "block";
@@ -235,6 +272,7 @@
             }, 1200);
         }
 
+        // رسم الفروع
         function branch(x, y, len, angle, width, generation) {
             if (generation > 11) {
                 drawHeartLeaves(x, y);
@@ -261,41 +299,105 @@
                 angleOffset2 = 0.55;
             }
 
-            // زدنا نسبة طول الفروع الفرعية من 0.82 إلى 0.84 عشان الشجرة تتمدد لفوق أكثر
             setTimeout(() => {
                 branch(x2, y2, len * 0.84, angle - angleOffset1, width * 0.72, generation + 1);
                 branch(x2, y2, len * 0.84, angle + angleOffset2, width * 0.72, generation + 1);
             }, 90);
         }
 
+        // رسم القلوب وتخزين إحداثياتها للحركة القادمة
         function drawHeartLeaves(x, y) {
             const colors = ["#ff1493", "#ff69b4", "#ffa500", "#fffa65", "#ff66b2", "#ffb6c1"];
             
             for (let i = 0; i < 4; i++) {
-                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-                ctx.font = (12 + Math.random() * 16) + "px Arial";
-                ctx.fillText(
-                    "♥", 
-                    x + (Math.random() * 36 - 18), 
-                    y + (Math.random() * 36 - 18)
-                );
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                let size = 12 + Math.random() * 16;
+                let lx = x + (Math.random() * 36 - 18);
+                let ly = y + (Math.random() * 36 - 18);
+
+                ctx.fillStyle = color;
+                ctx.font = size + "px Arial";
+                ctx.fillText("♥", lx, ly);
+
+                // حفظ بيانات القلب لتأثير التناثر
+                leavesPos.push({
+                    x: lx,
+                    y: ly,
+                    color: color,
+                    size: size,
+                    vx: (Math.random() - 0.5) * 12,  // سرعة أفقية عشوائية
+                    vy: (Math.random() - 0.5) * 12 - 4, // سرعة عمودية (للأعلى قليلاً)
+                    alpha: 1
+                });
             }
         }
 
+        // دالة بدء رسم الشجرة
         function drawTree(startX, startY) {
+            leavesPos = []; // تصفير المصفوفة
             const isMobile = window.innerWidth < 768;
-            // زدنا الطول هنا: 100 للموبايل و 150 للابتوب
             const trunkLen = isMobile ? 100 : 150; 
-            // زدنا العرض شوي عشان يتحمل الطول الجديد
             const trunkWidth = isMobile ? 18 : 26; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
+            // بعد أن يكتمل رسم الشجرة (تقريباً 2.5 ثانية)، نسمح بالضغط
             setTimeout(() => {
-                typeMessage();
-            }, 3000);
+                isTreeReady = true;
+                document.getElementById("tapHint").style.display = "block";
+            }, 2500);
         }
 
+        // حدث الضغط على الشجرة
+        canvas.addEventListener('click', () => {
+            if (!isTreeReady) return;
+            isTreeReady = false; // نمنع الضغط مرة أخرى
+            document.getElementById("tapHint").style.display = "none";
+            document.getElementById("ground").style.display = "none"; // إخفاء الأرض
+            
+            explodeTree();
+        });
+
+        // تأثير تجزؤ الشجرة إلى قلوب
+        function explodeTree() {
+            function animateBurst() {
+                // مسح الـ Canvas بالكامل (يخفي الجذع)
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let active = false;
+
+                for (let i = 0; i < leavesPos.length; i++) {
+                    let p = leavesPos[i];
+                    if (p.alpha <= 0) continue;
+                    active = true;
+
+                    // تحديث مكان القلب (الفيزياء)
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3; // الجاذبية لتساقط القلوب
+                    p.alpha -= 0.015; // سرعة اختفاء القلب
+
+                    ctx.globalAlpha = Math.max(0, p.alpha);
+                    ctx.fillStyle = p.color;
+                    ctx.font = p.size + "px Arial";
+                    ctx.fillText("♥", p.x, p.y);
+                }
+                
+                ctx.globalAlpha = 1; // إعادة الشفافية للوضع الطبيعي
+
+                if (active) {
+                    // الاستمرار في التحريك طالما أن هناك قلوب ظاهرة
+                    requestAnimationFrame(animateBurst);
+                } else {
+                    // عند انتهاء تأثير القلوب، ننتقل للصفحة الثالثة
+                    document.getElementById("page2").style.display = "none";
+                    document.getElementById("page3").style.display = "flex";
+                    typeMessage();
+                }
+            }
+            animateBurst(); // بدء الحركة
+        }
+
+        // كتابة الرسالة في الصفحة الثالثة
         function typeMessage() {
             const text = `Hey you 💕\nHappy Birthday 🎈\nMay God bless you 🍀\nAnd give u many happiness 💞\nJust saying... you're pretty\nawesome 💖\nSending good vibes and maybe a\nwink 😉`;
             
@@ -308,7 +410,7 @@
                     i++;
                     setTimeout(write, 50); 
                 } else {
-                    box.innerHTML = text;
+                    box.innerHTML = text; // إزالة المؤشر عند الانتهاء (أو يمكنك تركه)
                 }
             }
             
