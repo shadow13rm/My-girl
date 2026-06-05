@@ -216,10 +216,9 @@
         const canvas = document.getElementById("treeCanvas");
         const ctx = canvas.getContext("2d");
         
-        let leavesPos = []; // لتخزين أماكن القلوب لعمل الانفجار
-        let isTreeReady = false; // للتأكد من انتهاء رسم الشجرة قبل الضغط
+        let leavesPos = []; 
+        let isTreeReady = false; 
 
-        // ضبط حجم الـ Canvas
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -243,7 +242,6 @@
             }
         }
 
-        // بدء الحركة (اختفاء صفحة 1 وظهور البذرة)
         function startAnimation() {
             document.getElementById("page1").style.display = "none";
             document.getElementById("page2").style.display = "block";
@@ -272,7 +270,6 @@
             }, 1200);
         }
 
-        // رسم الفروع
         function branch(x, y, len, angle, width, generation) {
             if (generation > 11) {
                 drawHeartLeaves(x, y);
@@ -305,7 +302,6 @@
             }, 90);
         }
 
-        // رسم القلوب وتخزين إحداثياتها للحركة القادمة
         function drawHeartLeaves(x, y) {
             const colors = ["#ff1493", "#ff69b4", "#ffa500", "#fffa65", "#ff66b2", "#ffb6c1"];
             
@@ -319,49 +315,44 @@
                 ctx.font = size + "px Arial";
                 ctx.fillText("♥", lx, ly);
 
-                // حفظ بيانات القلب لتأثير التناثر
+                // ** التعديل هنا: زيادة السرعة الأفقية والعمودية للانفجار **
                 leavesPos.push({
                     x: lx,
                     y: ly,
                     color: color,
                     size: size,
-                    vx: (Math.random() - 0.5) * 12,  // سرعة أفقية عشوائية
-                    vy: (Math.random() - 0.5) * 12 - 4, // سرعة عمودية (للأعلى قليلاً)
+                    vx: (Math.random() - 0.5) * 18,  
+                    vy: (Math.random() - 0.5) * 18 - 6, 
                     alpha: 1
                 });
             }
         }
 
-        // دالة بدء رسم الشجرة
         function drawTree(startX, startY) {
-            leavesPos = []; // تصفير المصفوفة
+            leavesPos = []; 
             const isMobile = window.innerWidth < 768;
             const trunkLen = isMobile ? 100 : 150; 
             const trunkWidth = isMobile ? 18 : 26; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
-            // بعد أن يكتمل رسم الشجرة (تقريباً 2.5 ثانية)، نسمح بالضغط
             setTimeout(() => {
                 isTreeReady = true;
                 document.getElementById("tapHint").style.display = "block";
             }, 2500);
         }
 
-        // حدث الضغط على الشجرة
         canvas.addEventListener('click', () => {
             if (!isTreeReady) return;
-            isTreeReady = false; // نمنع الضغط مرة أخرى
+            isTreeReady = false; 
             document.getElementById("tapHint").style.display = "none";
-            document.getElementById("ground").style.display = "none"; // إخفاء الأرض
+            document.getElementById("ground").style.display = "none"; 
             
             explodeTree();
         });
 
-        // تأثير تجزؤ الشجرة إلى قلوب
         function explodeTree() {
             function animateBurst() {
-                // مسح الـ Canvas بالكامل (يخفي الجذع)
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 let active = false;
 
@@ -370,11 +361,11 @@
                     if (p.alpha <= 0) continue;
                     active = true;
 
-                    // تحديث مكان القلب (الفيزياء)
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.3; // الجاذبية لتساقط القلوب
-                    p.alpha -= 0.015; // سرعة اختفاء القلب
+                    // ** التعديل هنا: جاذبية أقوى واختفاء أسرع **
+                    p.vy += 0.9; // كانت 0.3 (تسريع السقوط)
+                    p.alpha -= 0.04; // كانت 0.015 (تسريع التلاشي)
 
                     ctx.globalAlpha = Math.max(0, p.alpha);
                     ctx.fillStyle = p.color;
@@ -382,22 +373,19 @@
                     ctx.fillText("♥", p.x, p.y);
                 }
                 
-                ctx.globalAlpha = 1; // إعادة الشفافية للوضع الطبيعي
+                ctx.globalAlpha = 1; 
 
                 if (active) {
-                    // الاستمرار في التحريك طالما أن هناك قلوب ظاهرة
                     requestAnimationFrame(animateBurst);
                 } else {
-                    // عند انتهاء تأثير القلوب، ننتقل للصفحة الثالثة
                     document.getElementById("page2").style.display = "none";
                     document.getElementById("page3").style.display = "flex";
                     typeMessage();
                 }
             }
-            animateBurst(); // بدء الحركة
+            animateBurst(); 
         }
 
-        // كتابة الرسالة في الصفحة الثالثة
         function typeMessage() {
             const text = `Hey you 💕\nHappy Birthday 🎈\nMay God bless you 🍀\nAnd give u many happiness 💞\nJust saying... you're pretty\nawesome 💖\nSending good vibes and maybe a\nwink 😉`;
             
@@ -410,7 +398,7 @@
                     i++;
                     setTimeout(write, 50); 
                 } else {
-                    box.innerHTML = text; // إزالة المؤشر عند الانتهاء (أو يمكنك تركه)
+                    box.innerHTML = text; 
                 }
             }
             
