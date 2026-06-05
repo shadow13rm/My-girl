@@ -127,7 +127,7 @@
 
         #tapHint {
             position: absolute;
-            top: 8%; /* رفعنا النص لأعلى نقطة ممكنة لتجنب تداخل الفروع */
+            top: 8%;
             width: 100%;
             text-align: center;
             color: #ffb6c1;
@@ -286,7 +286,7 @@
             }
 
             setTimeout(() => {
-                // الرقم 0.83 سيجعل الشجرة تتمدد بشكل هائل وكبير جداً
+                // تركنا التمدد على 0.83 لتعطي حجم كبير للشجرة
                 branch(x2, y2, len * 0.83, angle - angleOffset1, width * 0.72, generation + 1);
                 branch(x2, y2, len * 0.83, angle + angleOffset2, width * 0.72, generation + 1);
             }, 70); 
@@ -297,7 +297,7 @@
             
             for (let i = 0; i < 4; i++) {
                 let color = colors[Math.floor(Math.random() * colors.length)];
-                let size = 12 + Math.random() * 16; // قلوب بحجم أكبر لتناسب الشجرة العملاقة
+                let size = 12 + Math.random() * 16; 
                 let lx = x + (Math.random() * 26 - 13);
                 let ly = y + (Math.random() * 26 - 13);
 
@@ -322,8 +322,8 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            // رفعنا طول الجذع الأساسي ليكون طويلاً جداً
-            const trunkLen = isMobile ? 135 : 160; 
+            // تم تعديل طول الجذع ليصبح 110 للموبايل
+            const trunkLen = isMobile ? 110 : 140; 
             const trunkWidth = isMobile ? 18 : 24; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
