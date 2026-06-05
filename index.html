@@ -146,13 +146,13 @@
         @media (max-width: 768px) {
             .message {
                 left: 5%;
-                top: 8%; /* رفع النص للأعلى */
-                width: 90%; /* إعطاء النص مساحة عرض أكبر */
-                font-size: 16px; /* تصغير الخط قليلاً ليناسب الشاشة */
+                top: 8%; 
+                width: 90%; 
+                font-size: 16px; 
                 line-height: 1.6;
             }
             .seed {
-                left: 50%; /* وضع البذرة والشجرة في المنتصف */
+                left: 50%; 
                 margin-left: -6px;
             }
         }
@@ -214,7 +214,6 @@
             const seed = document.getElementById("seed");
             const groundY = window.innerHeight - 120;
             
-            // قراءة موقع البذرة تلقائياً عشان يطابق التلفون (بالنص) واللابتوب (ع اليمين)
             const seedRect = seed.getBoundingClientRect();
             const seedX = seedRect.left + (seedRect.width / 2);
             
@@ -262,9 +261,10 @@
                 angleOffset2 = 0.55;
             }
 
+            // زدنا نسبة طول الفروع الفرعية من 0.82 إلى 0.84 عشان الشجرة تتمدد لفوق أكثر
             setTimeout(() => {
-                branch(x2, y2, len * 0.82, angle - angleOffset1, width * 0.72, generation + 1);
-                branch(x2, y2, len * 0.82, angle + angleOffset2, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.84, angle - angleOffset1, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.84, angle + angleOffset2, width * 0.72, generation + 1);
             }, 90);
         }
 
@@ -283,10 +283,11 @@
         }
 
         function drawTree(startX, startY) {
-            // تحديد حجم الشجرة بناءً على عرض الشاشة
             const isMobile = window.innerWidth < 768;
-            const trunkLen = isMobile ? 80 : 120; // 80 للموبايل، 120 للابتوب
-            const trunkWidth = isMobile ? 15 : 22; // 15 للموبايل، 22 للابتوب
+            // زدنا الطول هنا: 100 للموبايل و 150 للابتوب
+            const trunkLen = isMobile ? 100 : 150; 
+            // زدنا العرض شوي عشان يتحمل الطول الجديد
+            const trunkWidth = isMobile ? 18 : 26; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
