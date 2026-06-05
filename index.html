@@ -127,7 +127,7 @@
 
         #tapHint {
             position: absolute;
-            top: 15%; /* نزلنا النص شوي عشان ما يغطي الفروع العلوية */
+            top: 20%; /* نزلنا النص للأسفل ليكون متناسق مع حجم الشجرة الجديد */
             width: 100%;
             text-align: center;
             color: #ffb6c1;
@@ -286,9 +286,9 @@
             }
 
             setTimeout(() => {
-                // قللنا الرقم هون لـ 0.72 عشان الفروع ما تمتد لبرا الشاشة
-                branch(x2, y2, len * 0.72, angle - angleOffset1, width * 0.72, generation + 1);
-                branch(x2, y2, len * 0.72, angle + angleOffset2, width * 0.72, generation + 1);
+                // رفعنا الرقم لـ 0.74 ليعطي حجم متوازن جداً (لا هو كبير ولا صغير)
+                branch(x2, y2, len * 0.74, angle - angleOffset1, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.74, angle + angleOffset2, width * 0.72, generation + 1);
             }, 70); 
         }
 
@@ -297,7 +297,7 @@
             
             for (let i = 0; i < 4; i++) {
                 let color = colors[Math.floor(Math.random() * colors.length)];
-                let size = 9 + Math.random() * 10; // صغرنا حجم القلوب شوي كمان عشان التناسق
+                let size = 10 + Math.random() * 12; // كبرنا القلوب درجة خفيفة
                 let lx = x + (Math.random() * 20 - 10);
                 let ly = y + (Math.random() * 20 - 10);
 
@@ -322,9 +322,9 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            // صغرنا الجذع الأساسي لـ 50 بدل 65 للموبايل
-            const trunkLen = isMobile ? 50 : 90; 
-            const trunkWidth = isMobile ? 10 : 18; 
+            // طول جذع متوازن
+            const trunkLen = isMobile ? 70 : 100; 
+            const trunkWidth = isMobile ? 12 : 20; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
