@@ -56,7 +56,7 @@
         }
 
         .big-heart {
-            font-size: 65px;
+            font-size: 55px; /* تم تصغيره قليلاً للموبايل */
             color: #ffb6c1;
             animation: pulse 1.5s infinite;
             display: inline-block;
@@ -73,13 +73,13 @@
         }
 
         .click-text {
-            font-size: 16px;
+            font-size: 15px;
             color: #ccc;
             line-height: 1.4;
         }
 
         .click-line {
-            width: 200px;
+            width: 160px; /* تقصير الخط ليناسب الشاشات الصغيرة */
             height: 2px;
             background: #ccc;
             margin-top: 5px;
@@ -97,20 +97,21 @@
 
         .seed {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background: #ff7da7;
             border-radius: 50%;
-            left: 80%; 
+            left: 50%; /* في منتصف الشاشة دائماً */
+            transform: translateX(-50%);
             top: -20px;
         }
 
         .ground {
             position: absolute;
-            bottom: 120px;
+            bottom: 15%; /* جعل خط الأرض متناسب نسبياً مع الارتفاع */
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background: white;
         }
 
@@ -126,11 +127,11 @@
 
         #tapHint {
             position: absolute;
-            top: 15%;
+            top: 12%;
             width: 100%;
             text-align: center;
             color: #ffb6c1;
-            font-size: 20px;
+            font-size: 18px;
             font-family: Arial, sans-serif;
             animation: pulse 1.5s infinite;
             display: none;
@@ -151,18 +152,19 @@
         }
 
         .message {
-            font-size: 20px;
-            line-height: 1.8;
+            font-size: 15px; /* خط أنسب لشاشات الموبايل المتنوعة */
+            line-height: 1.7;
             white-space: pre-line;
             text-align: center;
             font-family: monospace;
-            padding: 25px 30px;
-            background: rgba(20, 20, 20, 0.75);
+            padding: 20px;
+            background: rgba(20, 20, 20, 0.85);
             border-radius: 15px;
             box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
             border: 1px solid rgba(255, 105, 180, 0.4);
             backdrop-filter: blur(5px);
-            max-width: 90%;
+            width: 85%; /* تأخذ مساحة ممتازة دون الخروج عن الحواف */
+            max-width: 340px;
         }
 
         .cursor {
@@ -171,18 +173,6 @@
 
         @keyframes blink {
             50% { opacity: 0; }
-        }
-
-        /* ----- تعديلات الموبايل ----- */
-        @media (max-width: 768px) {
-            .seed {
-                left: 50%; 
-                margin-left: -6px;
-            }
-            .message {
-                font-size: 17px;
-                padding: 20px;
-            }
         }
     </style>
 </head>
@@ -229,7 +219,9 @@
         createStars();
 
         function createStars() {
-            for(let i = 0; i < 150; i++) {
+            // تقليل عدد النجوم قليلاً للموبايل لتفادي بطء الحركة (Lag)
+            const starCount = window.innerWidth < 768 ? 80 : 150;
+            for(let i = 0; i < starCount; i++) {
                 const star = document.createElement("div");
                 star.className = "star";
                 const size = Math.random() * 2 + 1;
@@ -247,15 +239,14 @@
             document.getElementById("page2").style.display = "block";
             
             const seed = document.getElementById("seed");
-            const groundY = window.innerHeight - 120;
-            
-            const seedRect = seed.getBoundingClientRect();
-            const seedX = seedRect.left + (seedRect.width / 2);
+            // حساب موقع الأرض ديناميكياً
+            const groundY = window.innerHeight * 0.85; 
+            const seedX = window.innerWidth / 2;
             
             seed.animate(
                 [
                     { top: "-20px" },
-                    { top: (groundY - 6) + "px" }
+                    { top: (groundY - 5) + "px" }
                 ],
                 {
                     duration: 1200,
@@ -297,9 +288,10 @@
             }
 
             setTimeout(() => {
-                branch(x2, y2, len * 0.84, angle - angleOffset1, width * 0.72, generation + 1);
-                branch(x2, y2, len * 0.84, angle + angleOffset2, width * 0.72, generation + 1);
-            }, 90);
+                // تم تقليل معامل الطول هنا إلى 0.76 لتصبح الفروع ملمومة وأقصر
+                branch(x2, y2, len * 0.76, angle - angleOffset1, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.76, angle + angleOffset2, width * 0.72, generation + 1);
+            }, 70); // تسريع البناء قليلاً للموبايل
         }
 
         function drawHeartLeaves(x, y) {
@@ -307,23 +299,23 @@
             
             for (let i = 0; i < 4; i++) {
                 let color = colors[Math.floor(Math.random() * colors.length)];
-                let size = 12 + Math.random() * 16;
-                let lx = x + (Math.random() * 36 - 18);
-                let ly = y + (Math.random() * 36 - 18);
+                let size = 10 + Math.random() * 12; // تصغير حجم أوراق القلوب قليلاً
+                let lx = x + (Math.random() * 26 - 13);
+                let ly = y + (Math.random() * 26 - 13);
 
                 ctx.fillStyle = color;
                 ctx.font = size + "px Arial";
                 ctx.fillText("♥", lx, ly);
 
-                // ** التعديل هنا: 18.5% من الـ 8000 قلب بتعطينا تقريباً 1500 قلب تتطاير **
                 if (Math.random() < 0.185) { 
                     leavesPos.push({
                         x: lx,
                         y: ly,
                         color: color,
                         size: size,
-                        vx: (Math.random() - 0.5) * 18,  
-                        vy: (Math.random() - 0.5) * 18 - 6, 
+                        // تقليل سرعة الانفجار الجانبي ليناسب شاشة الموبايل الضيقة
+                        vx: (Math.random() - 0.5) * 12,  
+                        vy: (Math.random() - 0.5) * 12 - 4, 
                         alpha: 1
                     });
                 }
@@ -333,15 +325,16 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            const trunkLen = isMobile ? 100 : 150; 
-            const trunkWidth = isMobile ? 18 : 26; 
+            // تم تقصير طول الجذع الأساسي ليصبح مناسباً جداً للموبايل (65) وللكمبيوتر (100)
+            const trunkLen = isMobile ? 65 : 100; 
+            const trunkWidth = isMobile ? 14 : 22; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
             setTimeout(() => {
                 isTreeReady = true;
                 document.getElementById("tapHint").style.display = "block";
-            }, 2500);
+            }, 2000);
         }
 
         canvas.addEventListener('click', () => {
@@ -365,8 +358,8 @@
 
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.9; 
-                    p.alpha -= 0.04; 
+                    p.vy += 0.6; // تقليل الجاذبية قليلاً ليكون السقوط ناعماً
+                    p.alpha -= 0.03; 
 
                     ctx.globalAlpha = Math.max(0, p.alpha);
                     ctx.fillStyle = p.color;
