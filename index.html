@@ -81,7 +81,6 @@
             z-index: 1;
         }
 
-        /* تنسيق النص الأيسر مع إعطائه مساحة أكبر تصل إلى 45% من الشاشة لراحة كاملة */
         .message {
             position: absolute;
             left: 8%;
@@ -103,7 +102,6 @@
             50% { opacity: 0; }
         }
 
-        /* تم تعديل موضع البذرة لتسقط في جهة اليمين عند 80% */
         .seed {
             position: absolute;
             width: 12px;
@@ -114,7 +112,6 @@
             top: -20px;
         }
 
-        /* الخط الأرضي الأبيض الممتد بالأسفل */
         .ground {
             position: absolute;
             bottom: 120px;
@@ -202,7 +199,6 @@
             const seed = document.getElementById("seed");
             const groundY = window.innerHeight - 120;
             
-            // البذرة تسقط عند محاذاة الـ 80% جهة اليمين
             seed.animate(
                 [
                     { top: "-20px" },
@@ -217,7 +213,6 @@
             
             setTimeout(() => {
                 seed.style.display = "none";
-                // جعل الشجرة تنبت بدقة من موقع الـ 80% لتطابق مكان سقوط البذرة
                 drawTree(window.innerWidth * 0.80, groundY);
             }, 1200);
         }
@@ -269,7 +264,8 @@
         }
 
         function drawTree(startX, startY) {
-            branch(startX, startY, 95, -Math.PI / 2, 18, 1);
+            // تم تغيير الطول هنا إلى 120 والسمك إلى 22 لتكبير الشجرة
+            branch(startX, startY, 120, -Math.PI / 2, 22, 1);
             
             setTimeout(() => {
                 typeMessage();
