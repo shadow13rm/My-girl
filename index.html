@@ -127,7 +127,7 @@
 
         #tapHint {
             position: absolute;
-            top: 10%; /* رفعنا النص للأعلى عشان نعطي مساحة للشجرة تكبر براحتها */
+            top: 8%; /* رفعنا النص لأعلى نقطة ممكنة لتجنب تداخل الفروع */
             width: 100%;
             text-align: center;
             color: #ffb6c1;
@@ -286,9 +286,9 @@
             }
 
             setTimeout(() => {
-                // الرقم السحري 0.80 لتعبي الشاشة بالضبط بدون ما تطلع برا الحواف
-                branch(x2, y2, len * 0.80, angle - angleOffset1, width * 0.72, generation + 1);
-                branch(x2, y2, len * 0.80, angle + angleOffset2, width * 0.72, generation + 1);
+                // الرقم 0.83 سيجعل الشجرة تتمدد بشكل هائل وكبير جداً
+                branch(x2, y2, len * 0.83, angle - angleOffset1, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.83, angle + angleOffset2, width * 0.72, generation + 1);
             }, 70); 
         }
 
@@ -297,9 +297,9 @@
             
             for (let i = 0; i < 4; i++) {
                 let color = colors[Math.floor(Math.random() * colors.length)];
-                let size = 11 + Math.random() * 15; // كبرنا القلوب شوي عشان التاج يكون كثيف
-                let lx = x + (Math.random() * 24 - 12);
-                let ly = y + (Math.random() * 24 - 12);
+                let size = 12 + Math.random() * 16; // قلوب بحجم أكبر لتناسب الشجرة العملاقة
+                let lx = x + (Math.random() * 26 - 13);
+                let ly = y + (Math.random() * 26 - 13);
 
                 ctx.fillStyle = color;
                 ctx.font = size + "px Arial";
@@ -322,9 +322,9 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            // رفعنا طول الجذع لـ 115 
-            const trunkLen = isMobile ? 115 : 140; 
-            const trunkWidth = isMobile ? 16 : 22; 
+            // رفعنا طول الجذع الأساسي ليكون طويلاً جداً
+            const trunkLen = isMobile ? 135 : 160; 
+            const trunkWidth = isMobile ? 18 : 24; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
