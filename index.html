@@ -56,7 +56,7 @@
         }
 
         .big-heart {
-            font-size: 55px; /* تم تصغيره قليلاً للموبايل */
+            font-size: 55px;
             color: #ffb6c1;
             animation: pulse 1.5s infinite;
             display: inline-block;
@@ -79,7 +79,7 @@
         }
 
         .click-line {
-            width: 160px; /* تقصير الخط ليناسب الشاشات الصغيرة */
+            width: 160px;
             height: 2px;
             background: #ccc;
             margin-top: 5px;
@@ -101,14 +101,14 @@
             height: 10px;
             background: #ff7da7;
             border-radius: 50%;
-            left: 50%; /* في منتصف الشاشة دائماً */
+            left: 50%;
             transform: translateX(-50%);
             top: -20px;
         }
 
         .ground {
             position: absolute;
-            bottom: 15%; /* جعل خط الأرض متناسب نسبياً مع الارتفاع */
+            bottom: 15%;
             left: 0;
             width: 100%;
             height: 2px;
@@ -152,7 +152,7 @@
         }
 
         .message {
-            font-size: 15px; /* خط أنسب لشاشات الموبايل المتنوعة */
+            font-size: 15px;
             line-height: 1.7;
             white-space: pre-line;
             text-align: center;
@@ -163,7 +163,7 @@
             box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
             border: 1px solid rgba(255, 105, 180, 0.4);
             backdrop-filter: blur(5px);
-            width: 85%; /* تأخذ مساحة ممتازة دون الخروج عن الحواف */
+            width: 85%;
             max-width: 340px;
         }
 
@@ -219,7 +219,6 @@
         createStars();
 
         function createStars() {
-            // تقليل عدد النجوم قليلاً للموبايل لتفادي بطء الحركة (Lag)
             const starCount = window.innerWidth < 768 ? 80 : 150;
             for(let i = 0; i < starCount; i++) {
                 const star = document.createElement("div");
@@ -239,7 +238,6 @@
             document.getElementById("page2").style.display = "block";
             
             const seed = document.getElementById("seed");
-            // حساب موقع الأرض ديناميكياً
             const groundY = window.innerHeight * 0.85; 
             const seedX = window.innerWidth / 2;
             
@@ -288,10 +286,9 @@
             }
 
             setTimeout(() => {
-                // تم تقليل معامل الطول هنا إلى 0.76 لتصبح الفروع ملمومة وأقصر
                 branch(x2, y2, len * 0.76, angle - angleOffset1, width * 0.72, generation + 1);
                 branch(x2, y2, len * 0.76, angle + angleOffset2, width * 0.72, generation + 1);
-            }, 70); // تسريع البناء قليلاً للموبايل
+            }, 70); 
         }
 
         function drawHeartLeaves(x, y) {
@@ -299,7 +296,7 @@
             
             for (let i = 0; i < 4; i++) {
                 let color = colors[Math.floor(Math.random() * colors.length)];
-                let size = 10 + Math.random() * 12; // تصغير حجم أوراق القلوب قليلاً
+                let size = 10 + Math.random() * 12; 
                 let lx = x + (Math.random() * 26 - 13);
                 let ly = y + (Math.random() * 26 - 13);
 
@@ -313,7 +310,6 @@
                         y: ly,
                         color: color,
                         size: size,
-                        // تقليل سرعة الانفجار الجانبي ليناسب شاشة الموبايل الضيقة
                         vx: (Math.random() - 0.5) * 12,  
                         vy: (Math.random() - 0.5) * 12 - 4, 
                         alpha: 1
@@ -325,7 +321,6 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            // تم تقصير طول الجذع الأساسي ليصبح مناسباً جداً للموبايل (65) وللكمبيوتر (100)
             const trunkLen = isMobile ? 65 : 100; 
             const trunkWidth = isMobile ? 14 : 22; 
 
@@ -358,7 +353,7 @@
 
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.6; // تقليل الجاذبية قليلاً ليكون السقوط ناعماً
+                    p.vy += 0.6; 
                     p.alpha -= 0.03; 
 
                     ctx.globalAlpha = Math.max(0, p.alpha);
