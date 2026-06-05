@@ -141,6 +141,21 @@
             from { opacity: .1; }
             to { opacity: 0.8; }
         }
+
+        /* ----- تعديلات الموبايل (Responsive Design) ----- */
+        @media (max-width: 768px) {
+            .message {
+                left: 5%;
+                top: 8%; /* رفع النص للأعلى */
+                width: 90%; /* إعطاء النص مساحة عرض أكبر */
+                font-size: 16px; /* تصغير الخط قليلاً ليناسب الشاشة */
+                line-height: 1.6;
+            }
+            .seed {
+                left: 50%; /* وضع البذرة والشجرة في المنتصف */
+                margin-left: -6px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -199,6 +214,10 @@
             const seed = document.getElementById("seed");
             const groundY = window.innerHeight - 120;
             
+            // قراءة موقع البذرة تلقائياً عشان يطابق التلفون (بالنص) واللابتوب (ع اليمين)
+            const seedRect = seed.getBoundingClientRect();
+            const seedX = seedRect.left + (seedRect.width / 2);
+            
             seed.animate(
                 [
                     { top: "-20px" },
@@ -213,7 +232,7 @@
             
             setTimeout(() => {
                 seed.style.display = "none";
-                drawTree(window.innerWidth * 0.80, groundY);
+                drawTree(seedX, groundY);
             }, 1200);
         }
 
@@ -264,8 +283,12 @@
         }
 
         function drawTree(startX, startY) {
-            // تم تغيير الطول هنا إلى 120 والسمك إلى 22 لتكبير الشجرة
-            branch(startX, startY, 120, -Math.PI / 2, 22, 1);
+            // تحديد حجم الشجرة بناءً على عرض الشاشة
+            const isMobile = window.innerWidth < 768;
+            const trunkLen = isMobile ? 80 : 120; // 80 للموبايل، 120 للابتوب
+            const trunkWidth = isMobile ? 15 : 22; // 15 للموبايل، 22 للابتوب
+
+            branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
             setTimeout(() => {
                 typeMessage();
