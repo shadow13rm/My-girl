@@ -127,7 +127,7 @@
 
         #tapHint {
             position: absolute;
-            top: 8%;
+            top: 12%;
             width: 100%;
             text-align: center;
             color: #ffb6c1;
@@ -286,9 +286,9 @@
             }
 
             setTimeout(() => {
-                // تم التعديل إلى 0.60 حسب طلبك
-                branch(x2, y2, len * 0.60, angle - angleOffset1, width * 0.72, generation + 1);
-                branch(x2, y2, len * 0.60, angle + angleOffset2, width * 0.72, generation + 1);
+                // نسبة 0.76 هي النسبة الذهبية للتوازن
+                branch(x2, y2, len * 0.76, angle - angleOffset1, width * 0.72, generation + 1);
+                branch(x2, y2, len * 0.76, angle + angleOffset2, width * 0.72, generation + 1);
             }, 70); 
         }
 
@@ -297,7 +297,7 @@
             
             for (let i = 0; i < 4; i++) {
                 let color = colors[Math.floor(Math.random() * colors.length)];
-                let size = 12 + Math.random() * 16; 
+                let size = 10 + Math.random() * 12; 
                 let lx = x + (Math.random() * 26 - 13);
                 let ly = y + (Math.random() * 26 - 13);
 
@@ -322,8 +322,9 @@
         function drawTree(startX, startY) {
             leavesPos = []; 
             const isMobile = window.innerWidth < 768;
-            const trunkLen = isMobile ? 85 : 140; 
-            const trunkWidth = isMobile ? 18 : 24; 
+            // 95 هو الطول المثالي المتناسق مع الشجرة
+            const trunkLen = isMobile ? 95 : 130; 
+            const trunkWidth = isMobile ? 14 : 20; 
 
             branch(startX, startY, trunkLen, -Math.PI / 2, trunkWidth, 1);
             
